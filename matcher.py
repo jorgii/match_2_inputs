@@ -1,12 +1,11 @@
-import threading
+from multiprocessing import Process, Value, Lock, Queue, Manager
+from ctypes import c_char_p
 import time
 
 
 input1 = open('input1.csv', 'r').read().split('\n')
 input2 = open('input21.csv', 'r').read().split('\n')
 result = open('result.csv', 'w')
-lock = threading.Lock()
-number_of_threads = 8
 
 
 def calculate(start, end):
@@ -30,6 +29,9 @@ def calculate(start, end):
 
 
 if __name__ == '__main__':
+    result = Value()
+    lock = Lock()
+    number_of_threads = 8
     start_time = time.time()
     try:
         input1.remove('')
