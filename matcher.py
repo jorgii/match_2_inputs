@@ -19,7 +19,7 @@ def calculate(result, input1, input2, lock):
                 result.value += \
                     line1.strip() + \
                     ',' + str(relations) + \
-                    ',' + str(list_of_lines) + '\n')
+                    ',' + str(list_of_lines) + '\n'
 
 
 if __name__ == '__main__':
