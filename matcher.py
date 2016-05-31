@@ -50,7 +50,7 @@ I can handle it')
         q)) for process in range(number_of_processes)]
     for p in processes:
         p.start()
-        print(p.get())
+        print(q.get())
     for p in processes:
         p.join()
     print("Executed in %s seconds" % (time.time() - start_time))
