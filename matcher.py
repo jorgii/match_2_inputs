@@ -2,7 +2,7 @@ import threading
 
 
 input1 = open('input1.csv', 'r').read().split('\n')
-input2 = open('input21.csv', 'r').read().split('\n')
+input2 = open('input2.csv', 'r').read().split('\n')
 result = open('result.csv', 'w')
 lock = threading.Lock()
 number_of_threads = 8
