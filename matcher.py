@@ -16,9 +16,9 @@ def calculate(result, input1, input2, lock):
         if relations > 1:
             with lock:
                 q.put("Discovered match for " + line1.strip())
-                result.write(
-                    line1.strip() +
-                    ',' + str(relations) +
+                result.value += \
+                    line1.strip() + \
+                    ',' + str(relations) + \
                     ',' + str(list_of_lines) + '\n')
 
 
