@@ -1,5 +1,5 @@
-input1 = open('input1.csv', 'r+')
-input2 = open('input2.csv', 'r+')
+input1 = open('input1.csv', 'r')
+input2 = open('input2.csv', 'r')
 result = open('result.csv', 'w')
 num1 = 0
 
