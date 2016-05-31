@@ -5,7 +5,7 @@ import time
 
 input1 = open('input1.csv', 'r').read().split('\n')
 input2 = open('input21.csv', 'r').read().split('\n')
-result = open('result.csv', 'w')
+result_file = open('result.csv', 'w')
 
 
 def calculate(start, end):
@@ -29,7 +29,10 @@ def calculate(start, end):
 
 
 if __name__ == '__main__':
-    result = Value()
+    manager = Manager()
+    result = manager.Value(
+        c_char_p,
+        'Supplier,Number of relations,list of lines\n')
     lock = Lock()
     number_of_threads = 8
     start_time = time.time()
@@ -39,7 +42,6 @@ if __name__ == '__main__':
     except ValueError:
         print('Some file(s) do not have empty lines but that\'s ok.\
 I can handle it')
-    result.write('Supplier,Number of relations,list of lines\n')
     threads = [threading.Thread(target=calculate, args=(
         int(thread*len(input1)/number_of_threads),
         int((thread+1)*len(input1)/number_of_threads))) for
