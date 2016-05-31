@@ -3,7 +3,7 @@ import time
 
 
 input1 = open('input1.csv', 'r').read().split('\n')
-input2 = open('input2.csv', 'r').read().split('\n')
+input2 = open('input21.csv', 'r').read().split('\n')
 result = open('result.csv', 'w')
 lock = threading.Lock()
 number_of_threads = 8
@@ -36,7 +36,7 @@ if __name__ == '__main__':
         input2.remove('')
     except ValueError:
         print('Some file(s) do not have empty lines but that\'s ok.\
-        I can handle it')
+I can handle it')
     result.write('Supplier,Number of relations,list of lines\n')
     threads = [threading.Thread(target=calculate, args=(
         int(thread*len(input1)/number_of_threads),
