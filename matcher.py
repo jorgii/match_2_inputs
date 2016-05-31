@@ -7,22 +7,6 @@ result = open('result.csv', 'w')
 lock = threading.Lock()
 number_of_threads = 8
 
-try:
-    input1.remove('')
-    input2.remove('')
-except ValueError:
-    print('file(s) do not have empty lines')
-
-result.write('Supplier,Number of relations,list of lines\n')
-
-try:
-    for thread in range(number_of_threads):
-        start = thread*len(input1)/number_of_threads
-        end = (thread+1)*len(input1)/number_of_threads
-        threading.start_new_thread(calculate, (input1[start:end]))
-except:
-    print("Error: unable to start thread")
-
 
 def calculate(suppliers):
     for line1 in suppliers:
@@ -40,3 +24,23 @@ def calculate(suppliers):
                 line1.strip() +
                 ',' + str(relations) +
                 ',' + str(list_of_lines) + '\n')
+
+
+if __name__ == '__main__':
+    try:
+        input1.remove('')
+        input2.remove('')
+    except ValueError:
+        print('file(s) do not have empty lines')
+    result.write('Supplier,Number of relations,list of lines\n')
+    threads = [threading.Thread(target=f, args=(
+        int(thread*len(input1)/number_of_threads),
+        int((thread+1)*len(input1)/number_of_threads))) for thread in range(number_of_threads)]
+    for t in threads:
+        t.start()
+        print(t)
+    for t in threads:
+        t.join()
+
+    print('Threads finished')
+    print(result)
