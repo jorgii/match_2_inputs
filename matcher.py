@@ -4,6 +4,7 @@ import time
 
 
 def calculate(result, input1, input2, lock, q):
+    q.put('Process started')
     for line1 in input1:
         list_of_lines = []
         relations = 0
@@ -53,4 +54,5 @@ I can handle it')
         print(q.get())
     for p in processes:
         p.join()
+    result_file.write(result.value)
     print("Executed in %s seconds" % (time.time() - start_time))
