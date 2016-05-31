@@ -2,10 +2,14 @@ from multiprocessing import Process, Value, Lock, Queue, Manager
 from ctypes import c_char_p
 import time
 
+input1 = open('input1.csv', 'r').read().split('\n')
+input2 = open('input21.csv', 'r').read().split('\n')
+result_file = open('result.csv', 'w')
 
-def calculate(result, input1, input2, lock, q):
+
+def calculate(result, start, end, lock, q):
     q.put('Process started')
-    for line1 in input1:
+    for line1 in input1[start:end]:
         list_of_lines = []
         relations = 0
         current_line = 0
@@ -17,17 +21,14 @@ def calculate(result, input1, input2, lock, q):
         if relations > 1:
             with lock:
                 q.put("Discovered match for " + line1.strip())
-                result.value += \
-                    line1.strip() + \
-                    ',' + str(relations) + \
-                    ',' + str(list_of_lines) + '\n'
+                result_file.write(
+                    line1.strip() +
+                    ',' + str(relations) +
+                    ',' + str(list_of_lines) + '\n')
 
 
 if __name__ == '__main__':
     q = Queue()
-    input1 = open('input1.csv', 'r').read().split('\n')
-    input2 = open('input2.csv', 'r').read().split('\n')
-    result_file = open('result.csv', 'w')
     manager = Manager()
     result = manager.Value(
         c_char_p,
@@ -43,10 +44,8 @@ if __name__ == '__main__':
 I can handle it')
     processes = [Process(target=calculate, args=(
         result,
-        input1[
-            int(process*len(input1)/number_of_processes):
-            int((process+1)*len(input1)/number_of_processes)],
-        input2,
+        int(process*len(input1)/number_of_processes),
+        int((process+1)*len(input1)/number_of_processes),
         lock,
         q)) for process in range(number_of_processes)]
     for p in processes:
