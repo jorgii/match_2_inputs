@@ -11,4 +11,8 @@ for num1, line1 in enumerate(input1, 1):
         if line1.strip() in line2:
             relations += 1
             list_of_lines.append(num2)
-    result.write(line1.strip() + ',' + str(relations) + ',' + str(list_of_lines) + '\n')
+    if relations > 1:
+        result.write(
+            line1.strip() +
+            ',' + str(relations) +
+            ',' + str(list_of_lines) + '\n')
