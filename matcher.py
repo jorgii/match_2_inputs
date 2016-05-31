@@ -3,8 +3,8 @@ from ctypes import c_char_p
 import time
 
 
-def calculate(result, input1, input2, lock):
-    for line1 in input1[start:end]:
+def calculate(result, input1, input2, lock, q):
+    for line1 in input1:
         list_of_lines = []
         relations = 0
         current_line = 0
@@ -43,10 +43,11 @@ I can handle it')
     processes = [Process(target=calculate, args=(
         result,
         input1[
-            int(process*len(input1)/number_of_processes),
+            int(process*len(input1)/number_of_processes):
             int((process+1)*len(input1)/number_of_processes)],
         input2,
-        lock)) for process in range(number_of_processes)]
+        lock,
+        q)) for process in range(number_of_processes)]
     for p in processes:
         p.start()
         print(p.get())
