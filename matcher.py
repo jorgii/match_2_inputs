@@ -3,13 +3,7 @@ from ctypes import c_char_p
 import time
 
 
-input1 = open('input1.csv', 'r').read().split('\n')
-input2 = open('input2.csv', 'r').read().split('\n')
-result_file = open('result.csv', 'w')
-
-
-def calculate(result, start, end, lock):
-    global result
+def calculate(result, input1, input2, lock):
     for line1 in input1[start:end]:
         list_of_lines = []
         relations = 0
@@ -21,7 +15,7 @@ def calculate(result, start, end, lock):
                 list_of_lines.append(current_line)
         if relations > 1:
             with lock:
-                print("Discovered match for " + line1.strip())
+                q.put("Discovered match for " + line1.strip())
                 result.write(
                     line1.strip() +
                     ',' + str(relations) +
@@ -29,6 +23,10 @@ def calculate(result, start, end, lock):
 
 
 if __name__ == '__main__':
+    q = Queue()
+    input1 = open('input1.csv', 'r').read().split('\n')
+    input2 = open('input2.csv', 'r').read().split('\n')
+    result_file = open('result.csv', 'w')
     manager = Manager()
     result = manager.Value(
         c_char_p,
@@ -44,11 +42,14 @@ if __name__ == '__main__':
 I can handle it')
     processes = [Process(target=calculate, args=(
         result,
-        int(process*len(input1)/number_of_processes),
-        int((process+1)*len(input1)/number_of_processes),
+        input1[
+            int(process*len(input1)/number_of_processes),
+            int((process+1)*len(input1)/number_of_processes)],
+        input2,
         lock)) for process in range(number_of_processes)]
     for p in processes:
         p.start()
+        print(p.get())
     for p in processes:
         p.join()
     print("Executed in %s seconds" % (time.time() - start_time))
