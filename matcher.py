@@ -5,9 +5,9 @@ result = open('result.csv', 'w')
 result.write('Supplier,Number of relations,list of lines\n')
 
 for num1, line1 in enumerate(input1, 1):
-    print(line1.strip())
     list_of_lines = []
     relations = 0
+    input2.seek(0, 0)
     for num2, line2 in enumerate(input2, 1):
         if line1.strip() in line2:
             relations += 1
