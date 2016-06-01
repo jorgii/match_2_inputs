@@ -7,6 +7,7 @@ input2 = open('input21.csv', 'r').read().split('\n')
 result = open('result.csv', 'w')
 lock = threading.Lock()
 number_of_threads = 8
+delimiter = ';'
 
 
 def calculate(start, end):
@@ -25,8 +26,8 @@ def calculate(start, end):
                 print("Discovered match for " + line1.strip())
                 result.write(
                     line1.strip() +
-                    ',' + str(relations) +
-                    ',' + str(list_of_lines) + '\n')
+                    delimiter + str(relations) +
+                    delimiter + str(list_of_lines) + '\n')
 
 
 if __name__ == '__main__':
@@ -35,9 +36,14 @@ if __name__ == '__main__':
         input1.remove('')
         input2.remove('')
     except ValueError:
-        print('Some file(s) do not have empty lines but that\'s ok.\
+        print('Some file(s) do not have empty lines but that\'s ok. \
 I can handle it')
-    result.write('Supplier,Number of relations,list of lines\n')
+    result.write(
+        'Supplier' +
+        delimiter +
+        'Number of relations' +
+        delimiter +
+        'list of lines\n')
     threads = [threading.Thread(target=calculate, args=(
         int(thread*len(input1)/number_of_threads),
         int((thread+1)*len(input1)/number_of_threads))) for
