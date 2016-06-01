@@ -1,14 +1,16 @@
-from multiprocessing import Process, Value, Lock, Queue, Manager
-from ctypes import c_char_p
+import threading
 import time
+
 
 input1 = open('input1.csv', 'r').read().split('\n')
 input2 = open('input21.csv', 'r').read().split('\n')
-result_file = open('result.csv', 'w')
+result = open('result.csv', 'w')
+lock = threading.Lock()
+number_of_threads = 8
 
 
-def calculate(result, start, end, lock, q):
-    q.put('Process started')
+def calculate(start, end):
+    global result
     for line1 in input1[start:end]:
         list_of_lines = []
         relations = 0
@@ -20,21 +22,14 @@ def calculate(result, start, end, lock, q):
                 list_of_lines.append(current_line)
         if relations > 1:
             with lock:
-                q.put("Discovered match for " + line1.strip())
-                result_file.write(
+                print("Discovered match for " + line1.strip())
+                result.write(
                     line1.strip() +
                     ',' + str(relations) +
                     ',' + str(list_of_lines) + '\n')
 
 
 if __name__ == '__main__':
-    q = Queue()
-    manager = Manager()
-    result = manager.Value(
-        c_char_p,
-        'Supplier,Number of relations,list of lines\n')
-    lock = Lock()
-    number_of_processes = 8
     start_time = time.time()
     try:
         input1.remove('')
@@ -42,16 +37,13 @@ if __name__ == '__main__':
     except ValueError:
         print('Some file(s) do not have empty lines but that\'s ok.\
 I can handle it')
-    processes = [Process(target=calculate, args=(
-        result,
-        int(process*len(input1)/number_of_processes),
-        int((process+1)*len(input1)/number_of_processes),
-        lock,
-        q)) for process in range(number_of_processes)]
-    for p in processes:
-        p.start()
-        print(q.get())
-    for p in processes:
-        p.join()
-    result_file.write(result.value)
+    result.write('Supplier,Number of relations,list of lines\n')
+    threads = [threading.Thread(target=calculate, args=(
+        int(thread*len(input1)/number_of_threads),
+        int((thread+1)*len(input1)/number_of_threads))) for
+        thread in range(number_of_threads)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
     print("Executed in %s seconds" % (time.time() - start_time))
