@@ -15,16 +15,25 @@ def calculate(start, end):
     for line1 in input1[start:end]:
         list_of_bps_codes = []
         relations = 0
+        b2wd_relations = 0
         for line2 in input2:
             if line1.strip() in line2:
                 relations += 1
-                list_of_bps_codes.append(get_bps_code(line2))
+                bps_code = get_bps_code(line2)
+                if bps_code[:4] == 'b2WD':
+                    b2wd_relations += 1
+                list_of_bps_codes.append(bps_code)
         with lock:
             print("Discovered match for " + line1.strip())
             result.write(
                 line1.strip() +
-                delimiter + str(relations) +
-                delimiter + str(list_of_bps_codes) + '\n')
+                delimiter +
+                str(relations) +
+                delimiter +
+                str(list_of_bps_codes) +
+                delimiter +
+                str(b2wd_relations) +
+                '\n')
 
 
 def get_bps_code(string):
@@ -43,7 +52,9 @@ I can handle it')
         delimiter +
         'Number of relations' +
         delimiter +
-        'list of buyers\n')
+        'List of buyers' +
+        delimiter +
+        'Number of 2WD relations\n')
     threads = [threading.Thread(target=calculate, args=(
         int(thread*len(input1)/number_of_threads),
         int((thread+1)*len(input1)/number_of_threads))) for
