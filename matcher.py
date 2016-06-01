@@ -19,13 +19,12 @@ def calculate(start, end):
             if line1.strip() in line2:
                 relations += 1
                 list_of_bps_codes.append(get_bps_code(line2))
-        if relations > 1:
-            with lock:
-                print("Discovered match for " + line1.strip())
-                result.write(
-                    line1.strip() +
-                    delimiter + str(relations) +
-                    delimiter + str(list_of_bps_codes) + '\n')
+        with lock:
+            print("Discovered match for " + line1.strip())
+            result.write(
+                line1.strip() +
+                delimiter + str(relations) +
+                delimiter + str(list_of_bps_codes) + '\n')
 
 
 def get_bps_code(string):
