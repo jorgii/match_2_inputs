@@ -3,7 +3,7 @@ import time
 
 
 input1 = open('input1.csv', 'r').read().split('\n')
-input2 = open('input21.csv', 'r').read().split('\n')
+input2 = open('input2.csv', 'r').read().split('\n')
 result = open('result.csv', 'w')
 lock = threading.Lock()
 number_of_threads = 8
@@ -13,22 +13,25 @@ delimiter = ';'
 def calculate(start, end):
     global result
     for line1 in input1[start:end]:
-        list_of_lines = []
+        list_of_bps_codes = []
         relations = 0
-        current_line = 0
         for line2 in input2:
-            current_line += 1
             if line1.strip() in line2:
                 relations += 1
-                list_of_lines.append(current_line)
+                list_of_bps_codes.append(get_bps_code(line2))
         if relations > 1:
             with lock:
                 print("Discovered match for " + line1.strip())
                 result.write(
                     line1.strip() +
                     delimiter + str(relations) +
-                    delimiter + str(list_of_lines) + '\n')
+                    delimiter + str(list_of_bps_codes) + '\n')
 
+
+def get_bps_code(string):
+    return string[
+        string.index('"b')+1:
+        string.index('"', string.index('"b')+1)]
 
 if __name__ == '__main__':
     start_time = time.time()
