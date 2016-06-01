@@ -46,7 +46,7 @@ I can handle it')
         delimiter +
         'Number of relations' +
         delimiter +
-        'list of lines\n')
+        'list of buyers\n')
     threads = [threading.Thread(target=calculate, args=(
         int(thread*len(input1)/number_of_threads),
         int((thread+1)*len(input1)/number_of_threads))) for
