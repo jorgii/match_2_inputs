@@ -29,9 +29,7 @@ def calculate(start, end):
 
 
 def get_bps_code(string):
-    return string[
-        string.index('"b')+1:
-        string.index('"', string.index('"b')+1)]
+    return string.split('","')[1]
 
 if __name__ == '__main__':
     start_time = time.time()
