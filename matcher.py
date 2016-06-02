@@ -2,12 +2,13 @@ import threading
 import time
 
 
+delimiter = ';'
 input1 = open('input1.csv', 'r').read().split('\n')
 input2 = open('input2.csv', 'r').read().split('\n')
+input3 - open('input2.csv', 'r').read().split(delimiter)
 result = open('result.csv', 'w')
 lock = threading.Lock()
 number_of_threads = 8
-delimiter = ';'
 
 
 def calculate(start, end):
@@ -16,6 +17,7 @@ def calculate(start, end):
         list_of_bps_codes = []
         relations = 0
         b2wd_relations = 0
+        buyers_count = 0
         for line2 in input2:
             if line1.strip() in line2:
                 relations += 1
@@ -23,6 +25,7 @@ def calculate(start, end):
                 if bps_code[:4] == 'b2WD':
                     b2wd_relations += 1
                 list_of_bps_codes.append(bps_code)
+        buyers_count = count_buyers(list_of_bps_codes, input3)
         with lock:
             print("Discovered match for " + line1.strip())
             result.write(
@@ -33,7 +36,16 @@ def calculate(start, end):
                 str(list_of_bps_codes) +
                 delimiter +
                 str(b2wd_relations) +
+                str(buyers_count) +
                 '\n')
+
+
+def count_buyers(buyers_source, buyers):
+    count = 0
+    for buyer in buyers_source:
+        if buyer in buyers:
+            count += 1
+    return count
 
 
 def get_bps_code(string):
@@ -54,7 +66,9 @@ I can handle it')
         delimiter +
         'List of buyers' +
         delimiter +
-        'Number of 2WD relations\n')
+        'Number of 2WD relations' +
+        delimiter +
+        'Buyers from Input3\n')
     threads = [threading.Thread(target=calculate, args=(
         int(thread*len(input1)/number_of_threads),
         int((thread+1)*len(input1)/number_of_threads))) for
