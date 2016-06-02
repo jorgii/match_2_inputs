@@ -5,7 +5,7 @@ import time
 delimiter = ';'
 input1 = open('input1.csv', 'r').read().split('\n')
 input2 = open('input2.csv', 'r').read().split('\n')
-input3 - open('input2.csv', 'r').read().split(delimiter)
+input3 = open('input3.csv', 'r').read().split(delimiter)
 result = open('result.csv', 'w')
 lock = threading.Lock()
 number_of_threads = 8
@@ -56,6 +56,7 @@ if __name__ == '__main__':
     try:
         input1.remove('')
         input2.remove('')
+        input3.remove('')
     except ValueError:
         print('Some file(s) do not have empty lines but that\'s ok. \
 I can handle it')
