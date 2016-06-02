@@ -41,10 +41,11 @@ def calculate(start, end):
                 '\n')
 
 
-def count_buyers(buyers_source, buyers):
+def count_buyers(buyers_list, buyers_to_check_from):
     count = 0
-    for buyer in buyers_source:
-        if buyer in buyers:
+    for buyer in buyers_list:
+        if buyer in buyers_to_check_from:
+            print("Buyer: ", buyer)
             count += 1
     return count
 
