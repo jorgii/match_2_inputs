@@ -36,6 +36,7 @@ def calculate(start, end):
                 str(list_of_bps_codes) +
                 delimiter +
                 str(b2wd_relations) +
+                delimiter +
                 str(buyers_count) +
                 '\n')
 
